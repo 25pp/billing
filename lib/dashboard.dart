@@ -1,6 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import 'package:billing/invoice_list.dart';
+import 'package:billing/utils/color.dart';
 import 'package:flutter/material.dart';
 
+import 'invoice_form.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -25,55 +27,60 @@ class _DashboardState extends State<Dashboard> {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (isExpanded) ...[
-            _buildMiniFab(Icons.description, 'Invoice',  Color(0xFF00e673), () {
+            _buildMiniFab(Icons.description, 'Invoice', ColorConstant.greenAccent, () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => InvoiceScreen()),
+              );
+
               // Add create invoice logic
-            }),
+            },"btn1"),
             const SizedBox(height: 8),
-            _buildMiniFab(Icons.local_shipping, 'Challan', Color(0xFF0000ff), () {
+            _buildMiniFab(Icons.local_shipping, 'Challan', ColorConstant.blueAccent, () {
               // Add create challan logic
-            }),
+            },"btn2"),
             const SizedBox(height: 8),
-            _buildMiniFab(Icons.request_quote, 'Quotation', Color(0xFFa300cc), () {
+            _buildMiniFab(Icons.request_quote, 'Quotation', ColorConstant.purpleAccent, () {
               // Add create quotation logic
-            }),
+            },"btn3"),
             const SizedBox(height: 8),
           ],
           FloatingActionButton(
             onPressed: toggleFab,
-            backgroundColor: Color(0xFF000066),
+            backgroundColor:ColorConstant.royalBlue,
             child: Icon(isExpanded ? Icons.close : Icons.add,color: Colors.white,),
           ),
         ],
       ),
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
-        backgroundColor:Color(0xFF000066),
+        iconTheme: const IconThemeData(color: ColorConstant.white),
+        backgroundColor:ColorConstant.royalBlue,
         title: const Text('Dashboard',style:TextStyle(color: Colors.white),),
       ),
       drawer: Drawer(
-        backgroundColor:Color(0xFF000066),
-        shape: RoundedRectangleBorder(
+        backgroundColor:ColorConstant.royalBlue,
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.zero
         ),
         child: Column(
         //  padding: EdgeInsets.zero,
           children: [
-            SizedBox(height: 40,),
+            const SizedBox(height: 40,),
             ListTile(
-              tileColor: Color(0xFF000066),
-              leading: CircleAvatar(
+              tileColor: ColorConstant.royalBlue,
+              leading: const CircleAvatar(
                 backgroundColor: Colors.white,
-                  child: const Icon(Icons.person,size: 35,
+                  child: Icon(Icons.person,size: 35,
               )),
               title: const Text('User Name' ,style: TextStyle(color: Colors.white),),
-              subtitle: Text('user@example.com' ,style: TextStyle(color: Colors.white)),
+              subtitle: const Text('user@example.com' ,style: TextStyle(color: Colors.white)),
               onTap: () {
                 // Navigate to history page
                 Navigator.pop(context);
                 // Add your navigation logic here
               },
             ),
-            Divider(),
+            const Divider(),
        Expanded(
          child: Container(
            color: Colors.white,
@@ -157,7 +164,7 @@ class _DashboardState extends State<Dashboard> {
         child: Column(
           children: [
             _buildCard(
-              color: Color(0xFF00e673),
+              color: ColorConstant.greenAccent,
               title: 'Invoices',
               weeklyCount: 25,
               monthlyCount: 98,
@@ -165,7 +172,7 @@ class _DashboardState extends State<Dashboard> {
             ),
             const SizedBox(height: 16),
             _buildCard(
-              color: Color(0xFF0000ff),
+              color: ColorConstant.blueAccent,
               title: 'Delivery Challans',
               weeklyCount: 18,
               monthlyCount: 76,
@@ -173,7 +180,7 @@ class _DashboardState extends State<Dashboard> {
             ),
             const SizedBox(height: 16),
             _buildCard(
-              color: Color(0xFFa300cc),
+              color:ColorConstant.purpleAccent,
               title: 'Quotations',
               weeklyCount: 12,
               monthlyCount: 45,
@@ -191,61 +198,71 @@ class _DashboardState extends State<Dashboard> {
     required int monthlyCount,
     required int totalCount,
   }) {
-    return Card(  color: color,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+    return InkWell(
+      onTap: (){
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => InvoiceListScreen()),
+        );
+      },
+      child: Card(  color: color,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildCountItem(
-                  label: 'Weekly',
-                  count: weeklyCount,
-                  color: color,
-                ),
-                _buildCountItem(
-                  label: 'Monthly',
-                  count: monthlyCount,
-                  color: color,
-                ),
-                _buildCountItem(
-                  label: 'Total',
-                  count: totalCount,
-                  color: color,
-                ),
-              ],
-            ),
-          ],
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildCountItem(
+                    label: 'Weekly',
+                    count: weeklyCount,
+                    color: color,
+                  ),
+                  _buildCountItem(
+                    label: 'Monthly',
+                    count: monthlyCount,
+                    color: color,
+                  ),
+                  _buildCountItem(
+                    label: 'Total',
+                    count: totalCount,
+                    color: color,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
-  Widget _buildMiniFab(IconData icon, String label, Color color, VoidCallback onPressed) {
-    return Container(
+  Widget _buildMiniFab(IconData icon, String label,
+      Color color, VoidCallback onPressed,String tag) {
+    return SizedBox(
       width: 100, // Set a custom width here
       child: FloatingActionButton(
+        heroTag: tag,
         backgroundColor: color,
         onPressed: onPressed,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)), // Optional: makes the button rectangular
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.add, color: Colors.white),
-            SizedBox(width: 4), // Space between icon and text
+            const Icon(Icons.add, color: Colors.white),
+            const SizedBox(width: 4), // Space between icon and text
             Text(
               label,
-              style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+              style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
             ),
           ],
         ),
@@ -261,7 +278,7 @@ class _DashboardState extends State<Dashboard> {
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 14,
             color: Colors.white,
           ),
@@ -269,7 +286,7 @@ class _DashboardState extends State<Dashboard> {
         const SizedBox(height: 4),
         Text(
           count.toString(),
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             color: Colors.white,
